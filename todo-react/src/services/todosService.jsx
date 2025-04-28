@@ -8,6 +8,7 @@ export const fetchTodos = async () => {
 };
 
 export const addTodo = async (title) => {
+  console.log("title = ", title)
   const { data } = await axios.post(TODOS_API_URL, {
     title,
     completed: false,
@@ -16,11 +17,13 @@ export const addTodo = async (title) => {
 };
 
 export const deleteTodo = async (id) => {
+  console.log("id = ", id)
   await axios.delete(`${TODOS_API_URL}/${id}`);
   return id;
 };
 
 export const toggleTodoComplete = async (todo) => {
+  console.log("todo = ", todo);
   const { data } = await axios.put(`${TODOS_API_URL}/${todo.id}`, {
     ...todo,
     completed: !todo.completed,

@@ -7,38 +7,22 @@ export const useTodos = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.TODOS],
     queryFn: fetchTodos,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    cacheTime: 1000 * 60 * 10, // 10 minutes
   });
 };
 
-export const useAddTodo = () => {
+// Generic mutation creator
+export const createMutation = (mutationFn) => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: addTodo,
-    // onSuccess: () => {
-    //   queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.TODOS] });
-    // },
+    mutationFn,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.TODOS] });
+    },
   });
 };
 
-export const useDeleteTodo = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: deleteTodo,
-    // onSuccess: () => {
-    //   queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.TODOS] });
-    // },
-  });
-};
-
-export const useToggleTodoComplete = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: toggleTodoComplete,
-    // onSuccess: () => {
-    //   queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.TODOS] });
-    // },
-  });
-};
+export const useAddTodo = () => createMutation((todo) => addTodo(todo));
+export const useDeleteTodo = () => createMutation((id) => deleteTodo(id));
+export const useToggleTodoComplete = () => createMutation((id) => toggleTodoComplete(id));

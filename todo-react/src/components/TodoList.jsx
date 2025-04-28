@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useTodos, useAddTodo, useDeleteTodo, useToggleTodoComplete } from '../hooks/todos';
 import { Loading } from './Loading';
 import { Error } from './Error';
@@ -11,15 +11,24 @@ const TodoList = () => {
   const deleteTodoMutation = useDeleteTodo();
   const toggleTodoMutation = useToggleTodoComplete();
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error error={error} />;
-
-  const handleAddTodo = () => {
+  
+  const handleAddTodo = useCallback(() => {
     if (!newTodo.trim()) return;
     addTodoMutation.mutate(newTodo);
     setNewTodo('');
-  };
+  }, [newTodo, addTodoMutation]);
+  
+  const handleToggleTodo = useCallback((todo) => {
+    toggleTodoMutation.mutate(todo);
+  }, [toggleTodoMutation]);
+  
+  const handleDeleteTodo = useCallback((id) => {
+    deleteTodoMutation.mutate(id);
+  }, [deleteTodoMutation]);
 
+  if (isLoading) return <Loading />;
+  if (error) return <Error error={error} />;
+  
   return (
     <div className="space-y-4">
       <div className="flex gap-2">
@@ -43,12 +52,12 @@ const TodoList = () => {
               <input
                 type="checkbox"
                 checked={todo.completed}
-                onChange={() => toggleTodoMutation.mutate(todo)}
+                onChange={() => handleToggleTodo(todo)}
                 className="mr-2"
               />
               <span className={todo.completed ? 'line-through text-gray-400' : ''}>{todo.title}</span>
             </div>
-            <button onClick={() => deleteTodoMutation.mutate(todo.id)} className="text-red-500">Delete</button>
+            <button onClick={() => handleDeleteTodo(todo.id)} className="text-red-500">Delete</button>
           </li>
         ))}
       </ul>
