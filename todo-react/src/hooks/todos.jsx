@@ -7,8 +7,8 @@ export const useTodos = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.TODOS],
     queryFn: fetchTodos,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    cacheTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 5000,
+    gcTime: 1000 * 60 * 10, // 10 minutes
   });
 };
 
@@ -17,9 +17,9 @@ export const createMutation = (mutationFn) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.TODOS] });
-    },
+    // onSuccess: () => {
+    //   queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.TODOS] });
+    // },
   });
 };
 

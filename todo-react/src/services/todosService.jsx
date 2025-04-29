@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const TODOS_API_URL = 'https://jsonplaceholder.typicode.com/todos';
+const TODOS_API_URL = 'https://dummyjson.com/todos';
 
 export const fetchTodos = async () => {
   const { data } = await axios.get(`${TODOS_API_URL}?_limit=10`);
@@ -8,10 +8,10 @@ export const fetchTodos = async () => {
 };
 
 export const addTodo = async (title) => {
-  console.log("title = ", title)
-  const { data } = await axios.post(TODOS_API_URL, {
+  const { data } = await axios.post(`${TODOS_API_URL}/add`, {
     title,
     completed: false,
+    userId: 7
   });
   return data;
 };
@@ -25,7 +25,6 @@ export const deleteTodo = async (id) => {
 export const toggleTodoComplete = async (todo) => {
   console.log("todo = ", todo);
   const { data } = await axios.put(`${TODOS_API_URL}/${todo.id}`, {
-    ...todo,
     completed: !todo.completed,
   });
   return data;

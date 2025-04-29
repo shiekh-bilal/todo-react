@@ -7,6 +7,7 @@ const TodoList = () => {
   const [newTodo, setNewTodo] = useState('');
 
   const { data: todos, isLoading, error } = useTodos();
+  console.log("todos = ", todos);
   const addTodoMutation = useAddTodo();
   const deleteTodoMutation = useDeleteTodo();
   const toggleTodoMutation = useToggleTodoComplete();
@@ -46,7 +47,7 @@ const TodoList = () => {
         </button>
       </div>
       <ul>
-        {todos?.map((todo) => (
+        {todos.todos?.map((todo) => (
           <li key={todo.id} className="flex justify-between items-center bg-white p-2 rounded shadow">
             <div>
               <input
@@ -55,7 +56,7 @@ const TodoList = () => {
                 onChange={() => handleToggleTodo(todo)}
                 className="mr-2"
               />
-              <span className={todo.completed ? 'line-through text-gray-400' : ''}>{todo.title}</span>
+              <span className={todo.completed ? 'line-through text-gray-400' : ''}>{todo.todo}</span>
             </div>
             <button onClick={() => handleDeleteTodo(todo.id)} className="text-red-500">Delete</button>
           </li>
