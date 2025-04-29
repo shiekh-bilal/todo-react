@@ -5,6 +5,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import TodoList from './components/TodoList';
 import {Loading}  from './components/Loading';
 import { MainLayout } from './components/Layouts/MainLayout';
+import './App.css'
 
 const router = createBrowserRouter([
   {
