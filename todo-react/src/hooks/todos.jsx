@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchTodos, addTodo, deleteTodo, toggleTodoComplete } from '../services/todosService';
+import { fetchRecipes, addRecipe, deleteRecipe, toggleTodoComplete } from '../services/todosService';
 import { QUERY_KEYS } from '../constants/queryKeys';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export const useTodos = () => {
+export const useRecipes = () => {
   return useQuery({
-    queryKey: [QUERY_KEYS.TODOS],
-    queryFn: fetchTodos,
+    queryKey: [QUERY_KEYS.RECIPES],
+    queryFn: fetchRecipes,
     staleTime: 5000,
     gcTime: 1000 * 60 * 10, // 10 minutes
   });
@@ -23,6 +23,6 @@ export const createMutation = (mutationFn) => {
   });
 };
 
-export const useAddTodo = () => createMutation((todo) => addTodo(todo));
-export const useDeleteTodo = () => createMutation((id) => deleteTodo(id));
+export const useAddRecipe = () => createMutation((recipe) => addRecipe(recipe));
+export const useDeleteRecipe = () => createMutation((id) => deleteRecipe(id));
 export const useToggleTodoComplete = () => createMutation((id) => toggleTodoComplete(id));
