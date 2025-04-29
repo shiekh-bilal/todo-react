@@ -1,61 +1,34 @@
-import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-
-const fetchTodos = async () => {
-  const { data } = await axios.get('https://jsonplaceholder.typicode.com/todos?_limit=10');
-  return data;
-};
+import React, { useCallback, useState } from 'react';
+import { useTodos, useAddTodo, useDeleteTodo, useToggleTodoComplete } from '../hooks/todos';
+import { Loading } from './Loading';
+import { Error } from './Error';
 
 const TodoList = () => {
-  const queryClient = useQueryClient();
   const [newTodo, setNewTodo] = useState('');
 
-  const { data: todos, isLoading, error } = useQuery({
-    queryKey: ['todos'],
-    queryFn: fetchTodos,
-  });
+  const { data: todos, isLoading, error } = useTodos();
+  const addTodoMutation = useAddTodo();
+  const deleteTodoMutation = useDeleteTodo();
+  const toggleTodoMutation = useToggleTodoComplete();
 
-  const addTodo = useMutation({
-    mutationFn: async (title) => {
-      const { data } = await axios.post('https://jsonplaceholder.typicode.com/todos', {
-        title,
-        completed: false,
-      });
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
-    },
-  });
+  
+  const handleAddTodo = useCallback(() => {
+    if (!newTodo.trim()) return;
+    addTodoMutation.mutate(newTodo);
+    setNewTodo('');
+  }, [newTodo, addTodoMutation]);
+  
+  const handleToggleTodo = useCallback((todo) => {
+    toggleTodoMutation.mutate(todo);
+  }, [toggleTodoMutation]);
+  
+  const handleDeleteTodo = useCallback((id) => {
+    deleteTodoMutation.mutate(id);
+  }, [deleteTodoMutation]);
 
-  const deleteTodo = useMutation({
-    mutationFn: async (id) => {
-      await axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`);
-      return id;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
-    },
-  });
-
-  const toggleComplete = useMutation({
-    mutationFn: async (todo) => {
-      const { data } = await axios.put(`https://jsonplaceholder.typicode.com/todos/${todo.id}`, {
-        ...todo,
-        completed: !todo.completed,
-      });
-      console.log("data = ", data);
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] });
-    },
-  });
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">Something went wrong: {error.message}</p>;
-
+  if (isLoading) return <Loading />;
+  if (error) return <Error error={error} />;
+  
   return (
     <div className="space-y-4">
       <div className="flex gap-2">
@@ -66,11 +39,7 @@ const TodoList = () => {
           placeholder="New Todo"
         />
         <button
-          onClick={() => {
-            if (!newTodo.trim()) return;
-            addTodo.mutate(newTodo);
-            setNewTodo('');
-          }}
+          onClick={handleAddTodo}
           className="bg-blue-500 text-white p-2 rounded"
         >
           Add
@@ -83,12 +52,12 @@ const TodoList = () => {
               <input
                 type="checkbox"
                 checked={todo.completed}
-                onChange={() => toggleComplete.mutate(todo)}
+                onChange={() => handleToggleTodo(todo)}
                 className="mr-2"
               />
               <span className={todo.completed ? 'line-through text-gray-400' : ''}>{todo.title}</span>
             </div>
-            <button onClick={() => deleteTodo.mutate(todo.id)} className="text-red-500">Delete</button>
+            <button onClick={() => handleDeleteTodo(todo.id)} className="text-red-500">Delete</button>
           </li>
         ))}
       </ul>
