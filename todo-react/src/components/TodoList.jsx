@@ -39,11 +39,13 @@ const TodoList = () => {
           <input
             className="flex-1 border border-gray-300 focus:ring-2 focus:ring-blue-400 p-3 rounded-lg text-gray-800 shadow-sm"
             value={newRecipe}
+            data-testid="new-recipe-input"
             onChange={(e) => setNewRecipe(e.target.value)}
             placeholder="Enter recipe name"
           />
           <button
             onClick={handleAddRecipe}
+            data-testid="add-recipe-button"
             className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg shadow"
           >
             Add
@@ -52,12 +54,13 @@ const TodoList = () => {
       </div>
 
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-gray-900">Recipe List</h1>
+        <h1 data-testid="recipe-list-heading" className="text-3xl font-bold text-gray-900">Recipe List</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {recipes.recipes?.map((recipe) => (
             <div
               key={recipe.id}
+              data-testid="recipe-card"
               className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition duration-300 flex flex-col"
             >
               <img
@@ -85,6 +88,7 @@ const TodoList = () => {
                   </div>
                   <button
                     onClick={() => handleDeleteRecipe(recipe.id)}
+                    data-testid="add-recipe-button"
                     className="text-red-500 hover:text-red-600 text-sm font-medium"
                   >
                     Delete
