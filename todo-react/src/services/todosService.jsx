@@ -4,6 +4,9 @@ const RECIPES_API_URL = 'https://dummyjson.com/recipes';
 
 export const fetchRecipes = async () => {
   const { data } = await axios.get(`${RECIPES_API_URL}?_limit=10`);
+  if(data.recipes.length < 30) {
+    throw new Error("This will be caught by ErrorBoundary!");
+  }
   return data;
 };
 

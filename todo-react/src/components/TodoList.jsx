@@ -28,9 +28,8 @@ const TodoList = () => {
     deleteRecipeMutation.mutate(id);
   }, [deleteRecipeMutation]);
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error error={error} />;
-  
+  // if (isLoading) return <Loading />;
+  // if (error) return <Error error={error} />;
   return (
     <div className="space-y-8 max-w-7xl mx-auto p-6">
       <div className="bg-white p-6 rounded-xl shadow-md space-y-4">
