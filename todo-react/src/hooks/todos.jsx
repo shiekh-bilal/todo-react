@@ -7,6 +7,7 @@ export const useRecipes = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.RECIPES],
     queryFn: fetchRecipes,
+    suspense: true,
     staleTime: 5000,
     gcTime: 1000 * 60 * 10, // 10 minutes
   });

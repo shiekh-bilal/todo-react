@@ -1,3 +1,9 @@
 export const Error = ({ error }) => {
-  return <p>Error: {error?.message || "Something went wrong!"}</p>;
+  console.error("Caught by ErrorBoundary:", error);
+  return (
+    <div className="p-4 bg-red-100 text-red-700 rounded">
+      <h2 className="font-bold text-lg">Something went wrong</h2>
+      <p>{error?.message}</p>
+    </div>
+  );
 };
