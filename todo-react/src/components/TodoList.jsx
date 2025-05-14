@@ -17,6 +17,24 @@ const TodoList = () => {
   const handleAddRecipe = useCallback(() => {
     if (!newRecipe.trim()) return;
     addRecipeMutation.mutate(newRecipe);
+    fetch('http://localhost:5678/webhook/recipe-added', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newRecipe),
+    });
+
+    fetch('https://hook.eu2.make.com/i7lkobtkvwmy9h3k2h5wb18bhzdua562', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newRecipe),
+    });
+
+    console.log("hello......");
     setNewRecipe('');
   }, [newRecipe, addRecipeMutation]);
   
